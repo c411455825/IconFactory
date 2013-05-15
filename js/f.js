@@ -2,7 +2,19 @@
     function A(){
         var t = this;
         t.sourcePaths = [
-            "source/tool.png"
+            "tool_20_20.png",
+            "clear_19_19.png",
+            "draw_20_20.png",
+            "drawarea_19_19.png",
+            "drawline_19_19.png",
+            "drawpoint_19_19.png",
+            "geolocate_19_19.png",
+            "measureArea_18_18.png",
+            "measureDistance_18_18.png",
+            "mesure_20_20.png",
+            "resizemap.png",
+            "zoomin_14_14.png",
+            "zoomout_14_14.png"
         ];
         t.canvas = null;
         t.cxt = null;
@@ -125,13 +137,112 @@
                 "theme":"dark-hive"
             },
             {
-                "color":"ffffff",
+                "color":"2694e8",
                 "theme":"cupertino",
                 "hover":1
             },
             {
-                "color":"cccccc",
+                "color":"3d80b3",
                 "theme":"cupertino"
+            },
+            {
+                "color":"ffffff",
+                "theme":"south-street",
+                "hover":1
+            },
+            {
+                "color":"eeeeee",
+                "theme":"south-street"
+            },
+            {
+                "color":"cc0000",
+                "theme":"blitzer",
+                "hover":1
+            },
+            {
+                "color":"cc0000",
+                "theme":"blitzer"
+            },
+            {
+                "color":"f08000",
+                "theme":"humanity",
+                "hover":1
+            },
+            {
+                "color":"f08000",
+                "theme":"humanity"
+            },
+            {
+                "color":"454545",
+                "theme":"hot-sneaks",
+                "hover":1
+            },
+            {
+                "color":"ffffff",
+                "theme":"hot-sneaks"
+            },
+            {
+                "color":"ffffff",
+                "theme":"excite-bike",
+                "hover":1
+            },
+            {
+                "color":"fcdd4a",
+                "theme":"excite-bike"
+            },
+            {
+                "color":"c98000",
+                "theme":"vader",
+                "hover":1
+            },
+            {
+                "color":"666666",
+                "theme":"vader"
+            },
+            {
+                "color":"ffffff",
+                "theme":"dot-luv",
+                "hover":1
+            },
+            {
+                "color":"9ccdfc",
+                "theme":"dot-luv"
+            },
+            {
+                "color":"add978",
+                "theme":"mint-choc",
+                "hover":1
+            },
+            {
+                "color":"9bcc60",
+                "theme":"mint-choc"
+            },
+            {
+                "color":"ffffff",
+                "theme":"black-tie",
+                "hover":1
+            },
+            {
+                "color":"ededed",
+                "theme":"black-tie"
+            },
+            {
+                "color":"b8ec79",
+                "theme":"trontastic",
+                "hover":1
+            },
+            {
+                "color":"b8ec79",
+                "theme":"trontastic"
+            },
+            {
+                "color":"f2ec64",
+                "theme":"swanky-purse",
+                "hover":1
+            },
+            {
+                "color":"e8e2b5",
+                "theme":"swanky-purse"
             }
         ];
         t.colorList = [];
@@ -158,24 +269,29 @@
         var t = this,task = [];
         for(var i=0;i< t.sourcePaths.length;i++){
             for(var j=0;j< t.colorList.length;j++){
-                task.push([
-                    t.sourcePaths[i],
-                    t.colorList[j]
-                ]);
+                var c = t.colorList[j];
+                task.push({
+                    "source":t.sourcePaths[i],
+                    "color":c.color.concat([]),
+                    "theme":c.theme,
+                    "hover":c.hover
+                });
             }
         }
 
         var i=-1;
         function loop(){
             i++;
-            t.modifyIcon(task[i][0],task[i][1],loop)
+            if(i<task.length)t.modifyIcon(task[i],loop);
         }
         loop();
     };
-    B.modifyIcon = function(path,color,cb){
+    B.modifyIcon = function(task,cb){
         var t = this;
-        t.readIcon(path,function(cb){
+        t.readIcon("source/"+task.source,function(task,cb){
             return function(img){
+                t.canvas.width = img.swidth;
+                t.canvas.height = img.sheight;
                 t.cxt.drawImage(img, 0, 0);
                 var imgData=t.cxt.getImageData(0,0,img.swidth,img.sheight);
                 for (var i=0;i<imgData.data.length;i+=4)
@@ -184,26 +300,37 @@
                     var g = imgData.data[i+1];
                     var b = imgData.data[i+2];
                     var a = imgData.data[i+3];
+                    var c = task.color;
+                    if(r==0&&g==0&&b==0&&a!=0){
+                        imgData.data[i] = c[0];
+                        imgData.data[i+1] = c[1];
+                        imgData.data[i+2] = c[2];
+                    }
+                    else if(r==0&&g==0&&b==0&&a==0){
 
-                    if(r==0&&g==0&&b==0&&a==255){
-                        imgData.data[i] = color[0];
-                        imgData.data[i+1] = color[1];
-                        imgData.data[i+2] = color[2];
+                    }
+                    else{
+                        debugger;
                     }
                 }
                 t.cxt.putImageData(imgData,0,0);
                 var dataURL = t.canvas.toDataURL("image/png");
                 var base64Url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-
+                var path = "demo\\uithemes\\"+task.theme+"\\images";
+                var name = (task.hover?"h_":"")+task.source;
                 $.ajax({
-                    "data":{"dataUrl":base64Url},
+                    "data":{
+                        "dataUrl":base64Url,
+                        "path":path,
+                        "name":name
+                    },
                     "dataType":"json",
                     "success":cb||function(){},
                     "type":"POST",
                     "url":"icon.jsp"
                 });
             }
-        }(cb));
+        }(task,cb));
     };
     B.readIcon = function(path,cb){
         var img = new Image();
@@ -227,16 +354,23 @@
         var t = this;
         t.colorList = [];
         for(var i=0;i< t.colorStrList.length;i++){
-            var cStr = t.colorStrList[i];
+            var cObj = t.colorStrList[i];
+            var cStr = cObj.color;
             var rStr = cStr.slice(0,2);
             var gStr = cStr.slice(2,4);
             var bStr = cStr.slice(4,6);
+            var theme = cObj.theme;
+            var hover = cObj.hover;
 
-            t.colorList.push([
-                trans(rStr),
-                trans(gStr),
-                trans(bStr)
-            ])
+            t.colorList.push({
+                "color":[
+                    trans(rStr),
+                    trans(gStr),
+                    trans(bStr)
+                ],
+                "theme":theme,
+                "hover":hover
+            })
         }
 
         function trans(str){
