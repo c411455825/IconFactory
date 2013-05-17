@@ -1,20 +1,34 @@
 ﻿(function(){
     function A(){
         var t = this;
-        t.sourcePaths = [
+        t.sourcePaths1 = [
+            "tool_16_16.png",
             "tool_20_20.png",
-            "clear_19_19.png",
+            "clear_16_16.png",
+            "clear_20_20.png",
+            "draw_16_16.png",
             "draw_20_20.png",
-            "drawarea_19_19.png",
-            "drawline_19_19.png",
-            "drawpoint_19_19.png",
-            "geolocate_19_19.png",
-            "measureArea_18_18.png",
-            "measureDistance_18_18.png",
+            "drawarea_16_16.png",
+            "drawarea_20_20.png",
+            "drawline_16_16.png",
+            "drawline_20_20.png",
+            "drawpoint_16_16.png",
+            "drawpoint_20_20.png",
+            "geolocate_16_16.png",
+            "geolocate_20_20.png",
+            "measureArea_16_16.png",
+            "measureArea_20_20.png",
+            "measureDistance_16_16.png",
+            "measureDistance_20_20.png",
+            "mesure_16_16.png",
             "mesure_20_20.png",
             "resizemap.png",
             "zoomin_14_14.png",
             "zoomout_14_14.png"
+        ];
+		t.sourcePaths = [
+            "zoom-minus.png",
+			"zoom-plus.png"
         ];
         t.canvas = null;
         t.cxt = null;
@@ -316,7 +330,8 @@
                 t.cxt.putImageData(imgData,0,0);
                 var dataURL = t.canvas.toDataURL("image/png");
                 var base64Url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                var path = "demo\\uithemes\\"+task.theme+"\\images";
+                //var path = "demo\\uithemes\\"+task.theme+"\\images\\custom";
+                var path = "img\\"+task.theme;
                 var name = (task.hover?"h_":"")+task.source;
                 $.ajax({
                     "data":{
