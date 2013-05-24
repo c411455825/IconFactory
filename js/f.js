@@ -1,7 +1,7 @@
 ﻿(function(){
     function A(){
         var t = this;
-        t.sourcePaths1 = [
+        /*t.sourcePaths1 = [
             "tool_16_16.png",
             "tool_20_20.png",
             "clear_16_16.png",
@@ -25,7 +25,7 @@
             "resizemap.png",
             "zoomin_14_14.png",
             "zoomout_14_14.png"
-        ];
+        ];*/
 		t.sourcePaths = [
             "zoom-minus.png",
 			"zoom-plus.png"
@@ -34,9 +34,9 @@
         t.cxt = null;
         t.colorStrList = [
             {
-                "color":"454545",
-                "theme":"base",
-                "hover":1
+                "color":"454545",                  //要修改的颜色
+                "theme":"base",					   //文件夹名称
+                "hover":1                          //是否是hover状态的图片，这种图片会自动在图片名前加上"h_"
             },
             {
                 "color":"888888",
